@@ -1,20 +1,19 @@
 const axios = require('axios');
 
-const apiGithubToken = "29b6a31c3b97ebbb93d05eb0825fa732864f7f76";
+const apiGithubToken = process.env.GITHUB_TOKEN;
 
 function listOrgRepos(req, res, next) {
-    const options = {
-        method: 'GET',
-        url: `https://api.github.com/orgs/${req.params.org}/repos`,
+
+    axios.get(`${process.env.GITHUB_API_URL}/orgs/${req.params.org}/repos`, {
         headers: { Authorization: 'token ' + apiGithubToken }
-    };
-    axios.request(options).then(function (response) {
-        console.log(response.data);
+    })
+    .then(function (response) {
         res.rawResponse = response.data;
-    }).catch(function (error) {
-        console.error(error);
+    })
+    .catch(function (error) {
         res.rawResponse = error;
-    }).then(()=> next());
+    })
+    .then(()=> next());
 }
 
 module.exports = listOrgRepos;
