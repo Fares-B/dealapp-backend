@@ -1,19 +1,7 @@
-const axios = require('axios');
+const github = require('../../services/github.service');
 
-const apiGithubToken = process.env.GITHUB_TOKEN;
+module.exports = async function listOrgRepos(req, res, next) {
+    res.rawResponse = await github.get(`/orgs/${req.params.org}/repos`);
 
-function listOrgRepos(req, res, next) {
-
-    axios.get(`${process.env.GITHUB_API_URL}/orgs/${req.params.org}/repos`, {
-        headers: { Authorization: 'token ' + apiGithubToken }
-    })
-    .then(function (response) {
-        res.rawResponse = response.data;
-    })
-    .catch(function (error) {
-        res.rawResponse = error;
-    })
-    .then(()=> next());
+    return next();
 }
-
-module.exports = listOrgRepos;

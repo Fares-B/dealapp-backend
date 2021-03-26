@@ -1,14 +1,14 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 if(process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
 }
 
-// /emojis
-const auth          = require('./src/middlewars/auth.middlewar');
-const rateLimit     = require('./src/middlewars/rateLimi.middlewart');
-const serialization = require('./src/middlewars/serialization.middlewar');
+const auth          = require('./src/middlewares/auth.middleware');
+const rateLimit     = require('./src/middlewares/rateLimi.middleware');
+const serialization = require('./src/middlewares/serialization.middleware');
 
 const getHome       = require('./src/controller/getHome.controller');
 const getSum        = require('./src/controller/getSum.controller');
@@ -17,9 +17,9 @@ const getSingleRepo = require('./src/controller/github/getSingleRepo.controller'
 const updateRepo    = require('./src/controller/github/updateRepo.controller');
 
 const app   = express();
-const port  = 3000;
 
 app.use(bodyParser.json());
+app.use(cors());
 
 app.get("/", auth, rateLimit, getHome, serialization);
 
@@ -27,8 +27,8 @@ app.get("/sum", auth, rateLimit, getSum, (req, res) => res.json(res.rawResponse)
 
 app.get("/github/:org", listOrgRepos, serialization);
 
-app.get("/github/:owner/:name", getSingleRepo, serialization);
+app.get("/github/:owner/:repo", getSingleRepo, serialization);
 
-app.patch("/github/:owner/:name", updateRepo, serialization);
+app.patch("/github/:owner/:repo", updateRepo, serialization);
 
-app.listen(port, () => console.log("Le serveur est lancé dans le port 3000.") );
+app.listen(process.env.PORT, () => console.log("server started") );
