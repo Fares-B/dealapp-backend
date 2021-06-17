@@ -1,11 +1,12 @@
 
 function auth(req, res, next) {
-    if (req.headers.authorization) {
-        return next();
-    }
+    const { user } = req.session;
 
-    console.log("access denied !");
-    return res.status(403).send("access denied !");
+    if (!user) {
+        return res.status(401).json("you're not connected");
+    }
+    res.locals.user = user;
+    return next();
 }
 
 module.exports = auth;
