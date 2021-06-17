@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 //connect to DB
 function connectDB() {
-    mongoose.connect("mongodb+srv://admin:admin@cluster0.5giza.mongodb.net/deal_app?retryWrites=true&w=majority", {
+    mongoose.connect(process.env.DB_CONFIG, {
         useNewUrlParser: true,
         useUnifiedTopology: true
     });
